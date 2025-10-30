@@ -1,0 +1,28 @@
+﻿@page
+@model ProjectManagementApp.Pages.Employees.DeleteModel
+@{
+    ViewData["Title"] = "Delete Employee";
+}
+
+<h1>Delete Employee</h1>
+
+@if (Model.Employee == null)
+{
+    <p>Employee not found.</p>
+}
+else
+{
+    <div class="card p-3 mb-3">
+        <h4>@Model.Employee.FirstName @Model.Employee.LastName</h4>
+        <p><strong>Email:</strong> @Model.Employee.Email</p>
+        <p><strong>Hire Date:</strong> @Model.Employee.HireDate.ToShortDateString()</p>
+        <p><strong>Active:</strong> @(Model.Employee.IsActive ? "Yes" : "No")</p>
+        <p><strong>Hourly Rate:</strong> @(Model.Employee.HourlyRate?.ToString("C") ?? "N/A")</p>
+    </div>
+
+    <form method="post">
+        <input type="hidden" asp-for="Employee.Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+}

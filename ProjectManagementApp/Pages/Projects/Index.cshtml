@@ -1,0 +1,38 @@
+﻿@page
+@model ProjectManagementApp.Pages.Projects.IndexModel
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<h1>Projects</h1>
+
+<a asp-page="Create" class="btn btn-primary mb-2">Create New Project</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model.Projects)
+        {
+            <tr>
+                <td>@project.Id</td>
+                <td>@project.Name</td>
+                <td>@project.Description</td>
+                <td>@(project.StartDate?.ToString("d") ?? "N/A")</td>
+                <td>@(project.EndDate?.ToString("d") ?? "N/A")</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-page="Details" asp-route-id="@project.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-page="Delete" asp-route-id="@project.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+         }
+         </tbody>
+    </table>

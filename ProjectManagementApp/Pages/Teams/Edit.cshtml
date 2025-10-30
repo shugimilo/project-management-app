@@ -1,0 +1,66 @@
+﻿@page "{id:int}"
+@model ProjectManagementApp.Pages.Teams.EditModel
+@{
+    ViewData["Title"] = "Edit Team";
+}
+
+<h1>Edit Team</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Team.Id" />
+    <div class="form-group">
+        <label asp-for="Team.Name"></label>
+        <input asp-for="Team.Name" class="form-control" />
+        <span asp-validation-for="Team.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Team.Description"></label>
+        <textarea asp-for="Team.Description" class="form-control"></textarea>
+        <span asp-validation-for="Team.Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Team</button>
+    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+</form>
+
+<hr />
+
+<h4>Assigned Employees</h4>
+@if (Model.AssignedEmployees.Any())
+{
+    <ul class="list-group mb-3">
+        @foreach (var employee in Model.AssignedEmployees)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @employee.FirstName @employee.LastName
+                <form method="post" asp-page-handler="RemoveEmployee" class="ms-2">
+                    <input type="hidden" name="teamId" value="@Model.Team.Id" />
+                    <input type="hidden" name="employeeId" value="@employee.Id" />
+                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No employees assigned yet.</p>
+}
+
+<h4>Add Employees</h4>
+<form method="post" asp-page-handler="AddEmployees">
+    <input type="hidden" name="teamId" value="@Model.Team.Id" />
+
+    @foreach (var employee in Model.EmployeesWithoutTeam)
+    {
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="SelectedEmployeeIds" value="@employee.Id" id="emp_@employee.Id" />
+            <label class="form-check-label" for="emp_@employee.Id">
+                @employee.FirstName @employee.LastName
+            </label>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-2">Add Selected Employees</button>
+</form>

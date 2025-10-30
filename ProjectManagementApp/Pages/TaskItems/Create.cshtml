@@ -1,0 +1,36 @@
+﻿@page
+@model ProjectManagementApp.Pages.TaskItems.CreateModel
+@{
+    ViewData["Title"] = "Create Task Item";
+}
+
+<h1>Create Task Item</h1>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="TaskItem.Name"></label>
+        <input asp-for="TaskItem.Name" class="form-control" />
+        <span asp-validation-for="TaskItem.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TaskItem.Description"></label>
+        <textarea asp-for="TaskItem.Description" class="form-control"></textarea>
+        <span asp-validation-for="TaskItem.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TaskItem.Status"></label>
+        <select asp-for="TaskItem.Status" class="form-control" asp-items="Html.GetEnumSelectList<ProjectManagementEntities.Models.WorkStatus>()">
+            <option value="">-- Select Status --</option>
+        </select>
+        <span asp-validation-for="TaskItem.Status" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Work Package</label>
+        <select asp-for="TaskItem.WorkPackageId" class="form-control" asp-items="Model.WorkPackageOptions">
+            <option value="">-- Select Work Package --</option>
+        </select>
+        <span asp-validation-for="TaskItem.WorkPackageId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+</form>
+

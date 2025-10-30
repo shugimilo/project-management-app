@@ -1,0 +1,39 @@
+﻿@page
+@model ProjectManagementApp.Pages.Teams.IndexModel
+@{
+    ViewData["Title"] = "Teams";
+}
+
+<h1>Teams</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New Team</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Project Count</th>
+            <th>Member Count</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var team in Model.Teams)
+        {
+            <tr>
+                <td>@team.Id</td>
+                <td>@team.Name</td>
+                <td>@team.ProjectTeams.Count</td>
+                <td>@team.TeamMembers.Count</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@team.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-page="Details" asp-route-id="@team.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-page="Delete" asp-route-id="@team.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

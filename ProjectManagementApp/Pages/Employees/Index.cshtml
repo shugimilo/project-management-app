@@ -1,0 +1,49 @@
+﻿@page
+@model ProjectManagementApp.Pages.Employees.IndexModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h1>Employees</h1>
+
+<a asp-page="Create" class="btn btn-primary mb-2">Create New Employee</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Hire Date</th>
+            <th>Is Active</th>
+            <th>Team</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.Employees)
+        {
+            <tr>
+                <td>@employee.Id</td>
+                <td>@employee.FirstName</td>
+                <td>@employee.LastName</td>
+                <td>@employee.Email</td>
+                <td>@employee.HireDate</td>
+                <td>@employee.IsActive</td>
+                @if (employee.TeamMembership?.Team != null)
+                {
+                    <td><a asp-page="/Teams/Details" asp-route-id="@employee.TeamMembership.TeamId">@employee.TeamMembership.Team.Name</a></td>
+                }
+                else
+                {
+                    <td>Not assigned to a team</td>
+                }
+                <td>
+                    <a asp-page="Edit" asp-route-id="@employee.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-page="Details" asp-route-id="@employee.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-page="Delete" asp-route-id="@employee.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

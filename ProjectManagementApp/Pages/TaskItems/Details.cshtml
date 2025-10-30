@@ -1,0 +1,119 @@
+﻿@page "{id:int}"
+@model ProjectManagementApp.Pages.TaskItems.DetailsModel
+@{
+    ViewData["Title"] = "Task Item Details";
+}
+
+<h2>Task Item Details</h2>
+
+@if (Model.TaskItem != null)
+{
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">@Model.TaskItem.Name</h3>
+            <p><strong>Description:</strong> @Model.TaskItem.Description</p>
+            <p><strong>Status:</strong> @Model.TaskItem.Status</p>
+            <p>
+                <strong>Project:</strong>
+                @if (Model.TaskItem.WorkPackage?.Project != null)
+                {
+                    <a asp-page="/Projects/Details" asp-route-id="@Model.TaskItem.WorkPackage.Project.Id">
+                        @Model.TaskItem.WorkPackage.Project.Name
+                    </a>
+                }
+                else
+                {
+                    <span>N/A</span>
+                }
+            </p>
+            <p>
+                <strong>Work Package:</strong>
+                @if (Model.TaskItem.WorkPackage != null)
+                {
+                    <a asp-page="/WorkPackages/Details" asp-route-id="@Model.TaskItem.WorkPackage.Id">
+                        @Model.TaskItem.WorkPackage.Name
+                    </a>
+                }
+                else
+                {
+                    <span>N/A</span>
+                }
+            </p>
+        </div>
+    </div>
+
+    <h4 class="mt-4">Activities</h4>
+    @if (Model.TaskItem.Activities?.Any() == true)
+    {
+        <ul class="list-group mb-3">
+            @foreach (var activity in Model.TaskItem.Activities)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>@activity.Name</strong> - @activity.Description
+                        <br />
+                        Planned Hours: @activity.PlannedHours,
+                        Actual Hours: @activity.ActualHours,
+                        Status: @activity.Status
+                    </div>
+                    <div>
+                        <a asp-page="/Activities/Edit" asp-route-id="@activity.Id" class="btn btn-sm btn-warning me-2">Edit</a>
+                        <a asp-page="/Activities/Delete" asp-route-id="@activity.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No activities available for this task item.</p>
+    }
+
+    <h4>Overall Progress</h4>
+    <div class="progress mb-2">
+        <div class="progress-bar" role="progressbar"
+             style="width:@Model.ProgressPercent%;"
+             aria-valuenow="@Model.ProgressPercent" aria-valuemin="0" aria-valuemax="100">
+            @Model.ProgressPercent.ToString("0")%
+        </div>
+    </div>
+    <p>Planned Hours: @Model.TaskItem.Activities.Sum(a => a.PlannedHours)</p>
+    <p>Actual Hours: @Model.TaskItem.Activities.Sum(a => a.ActualHours)</p>
+
+    <h4 class="mt-4">Assigned Employees</h4>
+    @if (Model.TaskItem.TaskAssignments != null && Model.TaskItem.TaskAssignments.Any())
+    {
+        <ul class="list-group mb-3">
+            @foreach (var assignment in Model.TaskItem.TaskAssignments)
+            {
+                <li class="list-group-item">
+                    <a asp-page="/Employees/Details" asp-route-id="@assignment.EmployeeId">@assignment.Employee.FirstName @assignment.Employee.LastName</a>
+                    — @assignment.RoleOnTask
+                    <span class="text-muted">(@assignment.Status)</span>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No employees assigned yet.</p>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger mt-3">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="mt-3">
+        <a asp-page="/Activities/Create"
+           asp-route-taskItemId="@Model.TaskItem.Id"
+           class="btn btn-primary me-2">Add Activity</a>
+        <a asp-page="Edit" asp-route-id="@Model.TaskItem.Id" class="btn btn-warning me-2">Edit</a>
+        <a asp-page="Delete" asp-route-id="@Model.TaskItem.Id" class="btn btn-danger me-2">Delete</a>
+        <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+}
+else
+{
+    <p>Task Item not found.</p>
+}

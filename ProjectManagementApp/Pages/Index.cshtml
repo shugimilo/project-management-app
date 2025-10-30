@@ -1,0 +1,134 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1 class="text-center mb-4">Dashboard</h1>
+
+<style>
+    .dashboard-diagram {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        position: relative;
+    }
+
+    .diagram-row {
+        display: flex;
+        justify-content: center;
+        gap: 80px;
+        position: relative;
+    }
+
+    .diagram-row.bottom {
+        margin-top: -20px;
+    }
+
+    .card {
+        width: 200px;
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Connection lines */
+    .connection {
+        position: absolute;
+        width: 2px;
+        background: rgba(255,255,255,0.4);
+        z-index: 0;
+    }
+
+    .line-project-team {
+        top: 160px;
+        left: calc(50% - 180px);
+        height: 80px;
+        transform: rotate(-30deg);
+    }
+
+    .line-project-workpackage {
+        top: 160px;
+        left: calc(50% + 180px);
+        height: 80px;
+        transform: rotate(30deg);
+        color: black;
+    }
+
+    .line-team-employee {
+        top: 380px;
+        left: calc(50% - 270px);
+        height: 80px;
+    }
+
+    .line-workpackage-task {
+        top: 380px;
+        left: calc(50% + 270px);
+        height: 80px;
+    }
+</style>
+
+<div class="dashboard-diagram">
+    <!-- Center (Projects) -->
+    <div class="diagram-row">
+        <div class="card text-white bg-warning">
+            <div class="card-header">Projects</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.Dashboard.TotalProjects</h5>
+                <p>View all projects</p>
+                <a asp-page="/Projects/Index" class="btn btn-light">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Middle (Teams + Work Packages) -->
+    <div class="diagram-row">
+        <div class="card text-white bg-danger">
+            <div class="card-header">Teams</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.Dashboard.TotalTeams</h5>
+                <p>View all teams</p>
+                <a asp-page="/Teams/Index" class="btn btn-light">Go</a>
+            </div>
+        </div>
+
+        <div class="card text-white bg-info">
+            <div class="card-header">Work Packages</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.Dashboard.TotalWorkPackages</h5>
+                <p>View all work packages</p>
+                <a asp-page="/WorkPackages/Index" class="btn btn-light">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom (Employees + Tasks) -->
+    <div class="diagram-row bottom">
+        <div class="card text-white bg-primary">
+            <div class="card-header">Employees</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.Dashboard.TotalEmployees</h5>
+                <p>Active: @Model.Dashboard.ActiveEmployees</p>
+                <p>View all employees</p>
+                <a asp-page="/Employees/Index" class="btn btn-light">Go</a>
+            </div>
+        </div>
+
+        <div class="card text-white bg-success">
+            <div class="card-header">Tasks</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.Dashboard.TotalTasks</h5>
+                <p>Planned: @Model.Dashboard.PlannedTasks</p>
+                <p>In Progress: @Model.Dashboard.InProgressTasks</p>
+                <p>Completed: @Model.Dashboard.CompletedTasks</p>
+                <p>View all tasks</p>
+                <a asp-page="/TaskItems/Index" class="btn btn-light">Go</a>
+            </div>
+        </div>
+    </div>
+</div>

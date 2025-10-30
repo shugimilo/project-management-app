@@ -1,0 +1,63 @@
+﻿@page "{id:int}"
+@model ProjectManagementApp.Pages.Projects.EditModel
+@{
+    ViewData["Title"] = "Edit Project";
+}
+
+<h2>Edit Project</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Project.Id" />
+    <div class="form-group">
+        <label asp-for="Project.Name"></label>
+        <input asp-for="Project.Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Project.Code"></label>
+        <input asp-for="Project.Code" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Project.StartDate"></label>
+        <input asp-for="Project.StartDate" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Project.EndDate"></label>
+        <input asp-for="Project.EndDate" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Project.Description"></label>
+        <textarea asp-for="Project.Description" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
+<div class="form-group mt-3">
+    <label>Assigned Teams</label>
+    @if (Model.Project?.ProjectTeams.Any() == true)
+    {
+        <ul class="list-group mb-2">
+            @foreach (var pt in Model.Project.ProjectTeams)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                @pt.Team.Name
+                <form method="post" asp-page-handler="RemoveTeam">
+                    <input type="hidden" name="projectId" value="@Model.Project.Id" />
+                    <input type="hidden" name="teamId" value="@pt.TeamId" />
+                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                </form>
+                </li>
+            }
+        </ul>
+        <span>Assign Team:</span>
+    }
+    else
+    {
+        <span>No team assigned. Assign one:</span>
+    }
+
+    <form method="post" asp-page-handler="AssignTeam">
+        <input type="hidden" name="projectId" value="@Model.Project?.Id" />
+        <select asp-for="@Model.SelectedTeamId" asp-items="@Model.TeamOptions" class="form-select mb-2"></select>
+        <button type="submit" class="btn btn-primary btn-sm">Assign</button>
+    </form>
+</div>

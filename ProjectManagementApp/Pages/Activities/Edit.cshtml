@@ -1,0 +1,43 @@
+﻿@page "{id:int}"
+@model ProjectManagementApp.Pages.Activities.EditModel
+@{
+    ViewData["Title"] = "Edit Activity";
+}
+
+<h1>Edit Activity</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Activity.Id" />
+    <input type="hidden" asp-for="Activity.TaskItemId" />
+
+    <div class="form-group">
+        <label asp-for="Activity.Name"></label>
+        <input asp-for="Activity.Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Activity.Description"></label>
+        <textarea asp-for="Activity.Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Activity.PlannedHours"></label>
+        <input asp-for="Activity.PlannedHours" type="number" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Activity.ActualHours"></label>
+        <input asp-for="Activity.ActualHours" type="number" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Activity.Status"></label>
+        <select asp-for="Activity.Status" class="form-control"
+                asp-items="Html.GetEnumSelectList<ProjectManagementEntities.Models.WorkStatus>()">
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="/TaskItems/Details" asp-route-id="@Model.Activity.TaskItemId" class="btn btn-secondary">Cancel</a>
+</form>
+

@@ -1,0 +1,79 @@
+﻿@page "{id:int}"
+@model ProjectManagementApp.Pages.Projects.DetailsModel
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<h2>Project Details</h2>
+
+@if (Model.Project != null)
+{
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">@Model.Project.Name</h3>
+            <p><strong>Description:</strong> @Model.Project.Description</p>
+            <p><strong>Start Date:</strong> @(Model.Project.StartDate?.ToString("d") ?? "N/A")</p>
+            <p><strong>End Date:</strong> @(Model.Project.EndDate?.ToString("d") ?? "N/A")</p>
+        </div>
+    </div>
+    <h4>Work Packages</h4>
+    @if (Model.Project?.WorkPackages.Any() == true)
+    {
+        <ul class="list-group mb-3">
+            @foreach (var wp in Model.Project.WorkPackages)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>@wp.Name</strong> - @wp.Description
+                        <br />
+                        Planned Hours: @wp.Tasks.Sum(t => t.Activities.Sum(a => a.PlannedHours)) hrs,
+                        Actual Hours: @wp.Tasks.Sum(t => t.Activities.Sum(a => a.ActualHours)) hrs,
+                        Progress: @wp.CalculateProgress().ToString("0")%
+                    </div>
+                    <div>
+                        <a asp-page="/WorkPackages/Details" asp-route-id="@wp.Id" class="btn btn-sm btn-primary">View</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No work packages assigned to this project.</p>
+    }
+
+    <h4>Overall Progress</h4>
+    <div class="progress mb-2">
+        <div class="progress-bar" role="progressbar"
+             style="width:@Model.ProgressPercent%;"
+             aria-valuenow="@Model.ProgressPercent" aria-valuemin="0" aria-valuemax="100">
+            @Model.ProgressPercent.ToString("0")%
+        </div>
+    </div>
+    <p>Planned Hours: @Model.PlannedHours</p>
+    <p>Actual Hours: @Model.ActualHours</p>
+
+
+    <h4 class="mt-4">Assigned Teams</h4>
+    @if (Model.Project.ProjectTeams?.Any() == true)
+    {
+        <ul class="list-group mb-3">
+            @foreach (var pt in Model.Project.ProjectTeams)
+            {
+                <li class="list-group-item"><a asp-page="/Teams/Details" asp-route-id="@pt.Team.Id">@pt.Team.Name</a></li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No teams assigned yet.</p>
+    }
+
+    <a asp-page="Index" class="btn btn-secondary mt-3">Back to List</a>
+    <a asp-page="Edit" asp-route-id="@Model.Project.Id" class="btn btn-primary mt-3">Edit</a>
+    <a asp-page="Delete" asp-route-id="@Model.Project.Id" class="btn btn-danger mt-3">Delete</a>
+}
+else
+{
+    <p>Project not found.</p>
+}

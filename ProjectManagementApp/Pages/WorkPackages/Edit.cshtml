@@ -1,0 +1,81 @@
+﻿@page
+@model ProjectManagementApp.Pages.WorkPackages.EditModel
+@{
+    ViewData["Title"] = "Edit Work Package";
+}
+
+<h1>Edit Work Package</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="WorkPackage.Id" />
+    <div class="form-group">
+        <label asp-for="WorkPackage.Name"></label>
+        <input asp-for="WorkPackage.Name" class="form-control" />
+        <span asp-validation-for="WorkPackage.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="WorkPackage.Description"></label>
+        <textarea asp-for="WorkPackage.Description" class="form-control"></textarea>
+        <span asp-validation-for="WorkPackage.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Project</label>
+        <select asp-for="WorkPackage.ProjectId" class="form-control" asp-items="@(new SelectList(Model.Projects, "Id", "Name"))">
+            <option value="">-- Select Project --</option>
+        </select>
+        <span asp-validation-for="WorkPackage.ProjectId" class="text-danger"></span>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+<hr />
+
+<div class="form-group mt-3">
+    <label>Assigned Team</label>
+    @if (Model.WorkPackage?.Team != null)
+    {
+        <p>Current: <strong>@Model.WorkPackage.Team.Name</strong></p>
+    }
+    else
+    {
+        <p>No team assigned.</p>
+    }
+
+    <form method="post" asp-page-handler="AssignTeam">
+        <input type="hidden" name="workPackageId" value="@Model.WorkPackage?.Id" />
+        <select asp-for="SelectedTeamId" asp-items="@Model.AvailableTeams" class="form-select mb-2">
+            <option value="">-- Select Team --</option>
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Assign Team</button>
+    </form>
+</div>
+
+@if (Model.WorkPackage?.Tasks != null && Model.WorkPackage.Tasks.Any())
+{
+    <h4 class="mt-4">Tasks in this Work Package</h4>
+    <ul class="list-group">
+        @foreach (var task in Model.WorkPackage.Tasks)
+        {
+            <li class="list-group-item">
+                <strong>@task.Name</strong>
+                <span class="text-muted">(@task.Status)</span>
+                @if (task.TaskAssignments != null && task.TaskAssignments.Any())
+                {
+                    <ul class="mt-1">
+                        @foreach (var ta in task.TaskAssignments)
+                        {
+                            <li>@ta.Employee.FirstName @ta.Employee.LastName (@ta.RoleOnTask)</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No employees assigned.</p>
+                }
+            </li>
+        }
+    </ul>
+}

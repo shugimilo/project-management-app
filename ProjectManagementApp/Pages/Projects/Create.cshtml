@@ -1,0 +1,28 @@
+﻿@page
+@model ProjectManagementApp.Pages.Projects.CreateModel
+@{
+    ViewData["Title"] = "Create Project";
+}
+
+<h1>Create Project</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Project.Name"></label>
+        <input asp-for="Project.Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Project.Code"></label>
+        <input asp-for="Project.Code" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Project.StartDate"></label>
+        <input asp-for="Project.StartDate" class="form-control" type="date" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Project.EndDate"></label>
+        <input asp-for="Project.EndDate" class="form-control" type="date" />
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="./Index" class="btn btn-secondary">Back to list</a>
+</form>

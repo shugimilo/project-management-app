@@ -1,0 +1,25 @@
+﻿@page "{id:int}"
+@model ProjectManagementApp.Pages.Activities.DeleteModel
+@{
+    ViewData["Title"] = "Delete Activity";
+}
+
+<h1>Delete Activity</h1>
+
+<div class="card p-3">
+    <h4>Are you sure you want to delete this activity?</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Model.Activity.Name</dd>
+        <dt class="col-sm-2">Description</dt>
+        <dd class="col-sm-10">@Model.Activity.Description</dd>
+        <dt class="col-sm-2">Planned Hours</dt>
+        <dd class="col-sm-10">@Model.Activity.PlannedHours</dd>
+    </dl>
+
+    <form method="post">
+        <input type="hidden" asp-for="Activity.Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-page="/TaskItems/Details" asp-route-id="@Model.Activity.TaskItemId" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

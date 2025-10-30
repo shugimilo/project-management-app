@@ -1,0 +1,168 @@
+﻿@page
+@model ProjectManagementApp.Pages.Teams.DetailsModel
+@{
+    ViewData["Title"] = "Team Details";
+}
+
+<h2>Team Details</h2>
+
+@if (Model.Team == null)
+{
+    <p>Team not found.</p>
+}
+else
+{
+    <div class="card p-3 mb-3">
+        <h4>@Model.Team.Name</h4>
+        <p><strong>Description:</strong> @Model.Team.Description</p>
+        <p><strong>Total Members:</strong> @Model.Team.TeamMembers?.Count()</p>
+        <p><strong>Active Members:</strong> @Model.Team.TeamMembers?.Count(tm => tm.LeftOn == null)</p>
+
+        @{
+            var totalHours = Model.Team.TeamMembers?
+                .SelectMany(tm => tm.Employee.TimesheetEntries ?? new List<ProjectManagementEntities.Models.TimesheetEntry>())
+                .Sum(te => te.Hours) ?? 0;
+        }
+        <p><strong>Total Hours Worked (All Members):</strong> @totalHours</p>
+    </div>
+
+    <h4>Team Members</h4>
+    @if (Model.Team.TeamMembers?.Any() ?? false)
+    {
+        <table class="table table-striped mb-3">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Role</th>
+                    <th>Joined On</th>
+                    <th>Left On</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tm in Model.Team.TeamMembers)
+                {
+                    <tr>
+                        <td>
+                            <a asp-page="/Employees/Details" asp-route-id="@tm.EmployeeId">
+                                @tm.Employee.FirstName @tm.Employee.LastName
+                            </a>
+                        </td>
+                        <td>@tm.RoleInTeam</td>
+                        <td>@tm.JoinedOn.ToShortDateString()</td>
+                        <td>@(tm.LeftOn?.ToShortDateString() ?? "-")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No team members.</p>
+    }
+
+    <h4>Projects</h4>
+    @if (Model.Team.ProjectTeams?.Any() ?? false)
+    {
+        <div class="list-group mb-3">
+            @foreach (var projectTeam in Model.Team.ProjectTeams)
+            {
+                var project = projectTeam.Project;
+                <div class="list-group-item">
+                    <h5>
+                        <a asp-page="/Projects/Details" asp-route-id="@project.Id">
+                            @project.Name
+                        </a>
+                    </h5>
+
+                    @if (Model.Team.WorkPackages.Any(wp => wp.ProjectId == project.Id))
+                    {
+                        <ul class="mb-2">
+                            @foreach (var wp in Model.Team.WorkPackages.Where(wp => wp.ProjectId == project.Id))
+                            {
+                                <li>
+                                    <a asp-page="/WorkPackages/Details" asp-route-id="@wp.Id">
+                                        @wp.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No work packages for this project.</p>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No projects assigned to this team.</p>
+    }
+
+    <h4>Hours Worked Per Project and Work Package</h4>
+    var projectWorkPackageHours = Model.Team.TeamMembers?
+        .Where(tm => tm?.Employee != null && tm.Employee.TimesheetEntries != null)
+        .SelectMany(tm => tm.Employee.TimesheetEntries!)
+        .Where(te => te != null && te.Activity?.TaskItem?.WorkPackage?.Project != null)
+        .GroupBy(te => new
+        {
+            Project = te.Activity!.TaskItem!.WorkPackage!.Project!,
+            WorkPackage = te.Activity.TaskItem.WorkPackage!
+        })
+        .Select(g => new
+        {
+            ProjectId = g.Key.Project.Id,
+            ProjectName = g.Key.Project.Name,
+            WorkPackageId = g.Key.WorkPackage.Id,
+            WorkPackageName = g.Key.WorkPackage.Name,
+            TotalHours = g.Sum(te => te.Hours),
+            PlannedHours = g.Select(te => te.Activity!)
+                            .Distinct()
+                            .Sum(a => a.PlannedHours)
+        })
+        .OrderBy(g => g.ProjectName)
+        .ThenBy(g => g.WorkPackageName)
+        .ToList();
+
+    @if (projectWorkPackageHours != null && projectWorkPackageHours.Any())
+    {
+        <table class="table table-bordered table-striped mb-3">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Work Package</th>
+                    <th>Total Hours Worked</th>
+                    <th>Planned Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in projectWorkPackageHours)
+                {
+                    <tr>
+                        <td>
+                            <a asp-page="/Projects/Details" asp-route-id="@row.ProjectId">
+                                @row.ProjectName
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-page="/WorkPackages/Details" asp-route-id="@row.WorkPackageId">
+                                @row.WorkPackageName
+                            </a>
+                        </td>
+                        <td>@row.TotalHours</td>
+                        <td>@row.PlannedHours</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No timesheet data available for this team.</p>
+    }
+
+
+
+    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+}

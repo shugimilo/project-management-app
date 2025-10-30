@@ -1,0 +1,43 @@
+﻿@page
+@model ProjectManagementApp.Pages.Employees.EditModel
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<h2>Edit Employee</h2>
+<form method="post">
+    <input type="hidden" asp-for="Employee.Id" />
+
+    <div class="form-group">
+        <label asp-for="Employee.FirstName"></label>
+        <input asp-for="Employee.FirstName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.LastName"></label>
+        <input asp-for="Employee.LastName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.Email"></label>
+        <input asp-for="Employee.Email" type="email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.IsActive"></label>
+        <select asp-for="Employee.IsActive" class="form-control" asp-items="Model.IsActiveOptions">
+            <option value="">-- Select Status --</option>
+        </select>
+        <span asp-validation-for="Employee.IsActive" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedTeamId">Team</label>
+        <select asp-for="SelectedTeamId" asp-items="Model.AvailableTeams" class="form-control">
+            <option value="">-- No team assigned --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,44 @@
+﻿@page
+@model ProjectManagementApp.Pages.TaskItems.IndexModel
+@{
+    ViewData["Title"] = "Task Items";
+}
+
+<h1>Task Items</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New Task Item</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Work Package</th>
+            <th>Project</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model.TaskItems)
+        {
+            <tr>
+                <td>@task.Id</td>
+                <td>@task.Name</td>
+                <td>@task.Description</td>
+                <td>@task.Status</td>
+                <td><a asp-page="/WorkPackages/Details" asp-route-id="@task.WorkPackageId">@task.WorkPackage?.Name</a></td>
+                <td><a asp-page="/Projects/Details" asp-route-id="@task.WorkPackage?.ProjectId">@task.WorkPackage?.Project?.Name</a></td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-page="Details" asp-route-id="@task.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-page="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

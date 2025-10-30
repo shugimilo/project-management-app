@@ -1,0 +1,86 @@
+﻿@page "{id:int}"
+@model ProjectManagementApp.Pages.TaskItems.EditModel
+@{
+    ViewData["Title"] = "Edit Task Item";
+}
+
+<h2>Edit Task Item</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="TaskItem.Id" />
+
+    <div class="form-group">
+        <label asp-for="TaskItem.Name"></label>
+        <input asp-for="TaskItem.Name" class="form-control" />
+        <span asp-validation-for="TaskItem.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TaskItem.Description"></label>
+        <textarea asp-for="TaskItem.Description" class="form-control"></textarea>
+        <span asp-validation-for="TaskItem.Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TaskItem.Status"></label>
+        <input asp-for="TaskItem.Status" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Work Package</label>
+        <select asp-for="TaskItem.WorkPackageId" asp-items="Model.WorkPackageOptions" class="form-control">
+            <option value="">-- Select Work Package --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Save Task</button>
+    <a asp-page="Index" class="btn btn-secondary mt-3">Cancel</a>
+</form>
+
+<hr />
+
+<h4>Assigned Employees</h4>
+@if (Model.TaskItem?.TaskAssignments != null && Model.TaskItem.TaskAssignments.Any())
+{
+    <ul class="list-group mb-3">
+        @foreach (var assignment in Model.TaskItem.TaskAssignments)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @assignment.Employee.FirstName @assignment.Employee.LastName
+                (@assignment.RoleOnTask) - @assignment.Status
+
+                <form method="post" asp-page-handler="RemoveEmployee" class="ms-2">
+                    <input type="hidden" name="taskId" value="@Model.TaskItem.Id" />
+                    <input type="hidden" name="employeeId" value="@assignment.EmployeeId" />
+                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No employees assigned yet.</p>
+}
+
+<h4>Assign New Employee</h4>
+<form method="post" asp-page-handler="AssignEmployee">
+    <input type="hidden" name="id" value="@Model.TaskItem.Id" />
+
+    <div class="form-group">
+        <label>Select Employee:</label>
+        <select asp-for="SelectedEmployeeId" asp-items="Model.AvailableEmployees" class="form-control"></select>
+    </div>
+
+    <div class="form-group mt-2">
+        <label>Role:</label>
+        <input asp-for="RoleOnTask" class="form-control" />
+    </div>
+
+    <div class="form-group mt-2">
+        <label>Planned Hours:</label>
+        <input asp-for="PlannedHours" type="number" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Assign Employee</button>
+</form>
