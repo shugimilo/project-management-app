@@ -32,7 +32,7 @@ Implements a hierarchical work-unit model (Projects → Work Packages → Tasks 
 
 1. **Clone the repo**
 ```bash
-git clone https://github.com/yourusername/project-management-app.git
+git clone https://github.com/shugimilo/project-management-app.git
 cd project-management-app
 ```
 2. Open the solution
@@ -60,8 +60,8 @@ Use [SQLite Studio](https://sqlitestudio.pl/) to open the SQLite file (e.g. app.
 
 2. Clone & navigate
 ```bash
-git clone https://github.com/yourusername/project-management-app.git
-cd project-management-app/PathToWebProject   # change to the web project folder if solution contains multiple projects
+git clone https://github.com/shugimilo/project-management-app.git
+cd project-management-app/ProjectManagementApp
 ```
 
 3. Restore & build
