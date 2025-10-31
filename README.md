@@ -126,14 +126,6 @@ dotnet run
 
 ---
 
-## Design & architecture
-
-- Layered solution structure: The solution includes separate projects for entities, data access (DbContext), and the web app, aligned with common educational templates.
-- Entity model: The data model includes tables for Projects, WorkPackages, Tasks, Activities, Teams, Employees, and TimesheetEntries with appropriate relational constraints.
-- Composite pattern: Parent entities compute progress from child elements (planned vs actual). Activity PlannedHours is stored; ActualHours is derived by summing timesheet entries for (activity, employee).
-
----
-
 ## Author
 
 Petar Milojević — GitHub: [shugimilo](https://github.com/shugimilo)
