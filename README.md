@@ -60,28 +60,28 @@ This architecture provides maintainability, clear separation of concerns, and te
 git clone https://github.com/shugimilo/project-management-app.git
 cd project-management-app
 ```
-2. Open the solution
+2. Open the solution  
 Open the .sln file in Visual Studio 2022.
 
-3. Restore NuGet packages
+3. Restore NuGet packages  
 Visual Studio usually restores automatically. If not: Build → Restore NuGet Packages.
 
-4. Check connection string
+4. Check connection string  
 Open appsettings.json and verify the SQLite connection string (e.g. Data Source=app.db).
 
-5. Run the app
+5. Run the app  
 Press F5 (or click Run) to build and run. Visual Studio will launch the application in your browser.
 
-6. Inspect database (optional)
+6. Inspect database (optional)  
 Use [SQLite Studio](https://sqlitestudio.pl/) to open the SQLite file (e.g. app.db) and inspect tables, rows and relationships.
 
 ---
 
 ## Quick start — Command line (.NET CLI)
 
-1. Prerequisites
-.NET 8 SDK installed
-(Optional) Visual Studio Code or another editor
+1. Prerequisites  
+.NET 8 SDK installed  
+(Optional) Visual Studio Code or another editor  
 
 2. Clone & navigate
 ```bash
@@ -95,7 +95,7 @@ dotnet restore
 dotnet build
 ```
 
-4. (Optional) Apply EF migrations
+4. (Optional) Apply EF migrations  
 If the project uses migrations and includes them:
 ```bash
 dotnet ef database update
