@@ -5,6 +5,31 @@ Implements a hierarchical work-unit model (Projects → Work Packages → Tasks 
 
 ---
 
+## Project Structure & Architecture
+
+The solution is structured to clearly separate concerns using a layered approach:
+**1. ProjectManagementApp (Main Web App)**
+  - Contains Razor Pages for all entities, grouped in subdirectories (e.g., Pages/Activities, Pages/Employees). Each subdirectory has CRUD pages (Index, Details, Create, Edit, Delete).
+  - Uses services for business logic (ActivityService, EmployeeService, etc.), which communicate with the database project.
+**2. ProjectManagementDatabase**
+  - Handles data access and EF Core logic.
+  - Contains DbContext, DbContextFactory, migrations, and a DB initializer.
+**3. ProjectManagementEntities**
+  - Holds entity classes/models and enums for the database.
+  - Isolated domain layer ensures a clean separation between data models and business logic.
+
+**Approach:**
+  - **Layered Architecture** with four main layers:
+      - **Presentation Layer:** Razor Pages + Page Models
+      - **Business Logic / Services Layer:** Entity-specific services
+      - **Data Access Layer:** EF Core DbContext and database logic
+      - **Domain Layer:** Entity classes and enums
+  - **Composite pattern** is used for progress calculation: parent entities compute progress from children based on planned vs actual hours.
+
+This architecture provides maintainability, clear separation of concerns, and testability, while remaining simple enough for educational/demo purposes.
+
+---
+
 ## Key features
 
 - **Hierarchical work model:** Projects contain Work Packages; Work Packages contain Tasks; Tasks contain Activities.  
